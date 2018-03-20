@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+
+    <script>
+        $(function() {
+            var prov = $('#prov');
+            var city = $('#city');
+            var dist = $('#district');
+
+            $.get('/picture/provinces', function(data) {
+                // data 是get请求返回的js数据
+                var provinces = data.provinces;
+{#                alert(provinces);#}
+
+                $.each(provinces, function (index, provi) {
+                    // each方法在jq里面用来遍历对象
+                    // index: 表示索引的下表
+                    // provi：表示遍历出来的元素
+                    var id = provi[0];           // 区域的id
+                    var title = provi[1];        // 区域名称
+                    // console.log(index + " "  + id + ' ' + title)
+                    prov.append('<option value="'+ id +'">'+ title +'</option>');
+                });
+            prov.change(function () {
+                // 获取用户选中的省份的id
+                var id = $(this).val();
+                // 清空上一次显示的城市数据
+                city.empty().append('<option>--请选择城市--</option>');
+                // 清空上一次显示的区县数据
+                dist.empty().append('<option>--请选择区县--</option>');
+
+                // 根据省份id获取城市
+                $.get('/picture/provinces/'+id, function (data) {
+                    var cit = data.provinces;
+                    $.each(cit, function (index, ciy) {
+                        var id = ciy[0];
+                        var title = ciy[1];
+                        city.append('<option value="'+ id +'">'+ title +'</option>');
+                    });
+                });
+
+            });
+
+            city.change(function () {
+                // 获取用户选中的省份的id
+                var id = $(this).val();
+
+                // 清空上一次显示的区县数据
+                dist.empty().append('<option>--请选择区县--</option>');
+
+                // 根据省份id获取城市
+                $.get('/picture/provinces/'+id, function (data) {
+                    var cit = data.provinces;
+                    $.each(cit, function (index, dis) {
+                        var id = dis[0];
+                        var title = dis[1];
+                        dist.append('<option value="'+ id +'">'+ title +'</option>');
+                    });
+                });
+
+            });
+            });
+        })
+    </script>
+
+</head>
+<body>
+<h3>区域显示案例</h3>
+
+<select id="prov">
+    <option>--请选择省份--</option>
+</select>
+
+<select id="city">
+    <option>--请选择城市--</option>
+</select>
+
+<select id="district">
+    <option>--请选择区县--</option>
+</select>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>shouye</title>
+</head>
+<body>
+    <h1>部门信息</h1>
+    <a href="/fist/add_data/">新增</a>
+    <table>
+        <!-- 表头-->
+        <tr>
+            <td width="50">id</td>
+            <td width="200">部门名称</td>
+            <td width="200">成立时间</td>
+        </tr>
+
+        <!-- for循环生成表的多行-->
+        {% for dep in departments %}
+        <tr>
+            <td>{{ dep.id }}</td>
+            <td>{{ dep.name }}</td>
+            <td>{{ dep.create_date }}</td>
+            <td>
+                <a href="/fist/show_data/{{ dep.id }}/">查看</a>
+                <a href="/fist/del_data/{{ dep.id }}/">删除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
