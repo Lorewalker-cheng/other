@@ -11,6 +11,8 @@
             var prov = $('#prov');
             var city = $('#city');
             var dist = $('#district');
+            var ul = $('#ul01');
+            var page_num = $('#page');
 
             $.get('/picture/provinces', function(data) {
                 // data 是get请求返回的js数据
@@ -65,9 +67,49 @@
 
             });
             });
+
+            $.get('/picture/show_pic', function (data) {
+                var pict = data.pics;
+                var page = data.page_num;
+
+                $.each(pict, function (index, pic) {
+                    ul.append('<div class="ke"><img src="/static/media/'+pic+'"/>'+index+'</div>')
+                });
+                $.each(page, function (index, page_n) {
+                    // page_num.append('<a href="/picture/show_pic/'+page_n+'" value="'+ page_n +'">'+page_n+'</a>')
+                    // page_num.append('<h4 class="pp" id="pag" value="'+ page_n +'">'+page_n+'</h4>')
+                    page_num.append('<input type="button" id="pag" value="'+page_n+'"/>')
+                })
+            });
+
+            // 需要点击事件
+            $("#pag").click(function () {
+                //var pg = $(this).val();
+                //$.ajax({url:"/picture/show_pic/"+pg,async:false});
+                alert(123)
+            })
+
+
         })
     </script>
 
+    <style>
+        img{
+            width: 108px;
+            height: 192px;
+            margin: 10px 10px;
+        }
+        .ke{
+            width: 128px;
+            height: 222px;
+            float: left;
+            text-align: center;
+        }
+        .show{
+            width: 100%;
+            height: 242px;
+        }
+    </style>
 </head>
 <body>
 <h3>区域显示案例</h3>
@@ -83,5 +125,23 @@
 <select id="district">
     <option>--请选择区县--</option>
 </select>
+
+<!-- 上传文件需要指定为: enctype="multipart/form-data" -->
+<form method="post" action="/picture/do_upload" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    <input type="file" name="pic"> <br/>
+    <input type="submit" value="上传">
+</form>
+
+<h3>显示所有的图片</h3>
+<div class="show">
+<ul id="ul01"></ul>
+</div>
+<div id = page></div>
+<input type="button" id="pag" value="123"/>
+
+
 </body>
 </html>
